@@ -91,7 +91,8 @@ INSERT INTO users (username, password, email, phone, role) VALUES
 ('黄丽', '123456', 'huangli@example.com', '13900000007', 'user'),
 ('周杰', '123456', 'zhoujie@example.com', '13900000008', 'user'),
 ('吴敏', '123456', 'wumin@example.com', '13900000009', 'user'),
-('徐涛', '123456', 'xutao@example.com', '13900000010', 'user');
+('徐涛', '123456', 'xutao@example.com', '13900000010', 'user'),
+('bf', '123456', 'bf@dataquery.local', NULL, 'admin');
 
 -- 2. 商品分类测试数据（三级分类）
 INSERT INTO categories (name, parent_id, sort_order) VALUES

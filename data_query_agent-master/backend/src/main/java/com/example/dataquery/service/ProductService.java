@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.dataquery.model.Product;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 public interface ProductService extends IService<Product> {
     List<Product> findAll();
     List<Product> findByCategoryId(Long categoryId);
+    Product adjustStock(Long id, int change);
+    Product updatePrice(Long id, BigDecimal price);
 }

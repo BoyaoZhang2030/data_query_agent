@@ -5,6 +5,7 @@ C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\s
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\dao\UserMapper.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\dao\OrderItemMapper.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\service\QueryHistoryService.java
+C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\dto\OrderProductRequest.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\model\Category.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\annotation\RateLimit.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\service\DataQueryService.java
@@ -14,6 +15,7 @@ C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\s
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\service\impl\UserServiceImpl.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\service\impl\QueryHistoryServiceImpl.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\dao\ProductMapper.java
+C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\config\DefaultAccountConfig.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\controller\DataQueryController.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\controller\DataManageController.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\model\Product.java
@@ -22,6 +24,7 @@ C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\s
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\service\impl\ProductServiceImpl.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\dao\OrderMapper.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\service\impl\OrderServiceImpl.java
+C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\dto\CreateOrderRequest.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\service\impl\StatisticsServiceImpl.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\service\ProductService.java
 C:\Users\16776\Desktop\data_query_agent-master\data_query_agent-master\backend\src\main\java\com\example\dataquery\config\SpringAiConfig.java

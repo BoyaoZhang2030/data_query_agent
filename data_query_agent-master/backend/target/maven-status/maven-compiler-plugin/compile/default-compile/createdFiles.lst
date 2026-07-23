@@ -17,6 +17,7 @@ com\example\dataquery\service\UserService.class
 com\example\dataquery\util\Result.class
 com\example\dataquery\controller\DataManageController.class
 com\example\dataquery\controller\DataQueryController.class
+com\example\dataquery\dto\OrderProductRequest.class
 com\example\dataquery\service\impl\CategoryServiceImpl.class
 com\example\dataquery\dao\OrderItemMapper.class
 com\example\dataquery\dao\UserMapper.class
@@ -31,9 +32,11 @@ com\example\dataquery\config\SecurityConfig.class
 com\example\dataquery\model\OrderItem.class
 com\example\dataquery\service\impl\StatisticsServiceImpl.class
 com\example\dataquery\dao\QueryHistoryMapper.class
+com\example\dataquery\dto\CreateOrderRequest.class
 com\example\dataquery\service\StatisticsService.class
 com\example\dataquery\service\DataQueryService.class
 com\example\dataquery\service\ProductService.class
 com\example\dataquery\interceptor\RateLimitInterceptor.class
 com\example\dataquery\service\CategoryService.class
+com\example\dataquery\config\DefaultAccountConfig.class
 com\example\dataquery\service\OrderService.class
