@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Jul 22 11:14:22 CST 2026
+@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784690060662
+https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact com.alibaba.nacos\:nacos-auth-plugin\:pom\:2.4.2 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
+https\://repo.maven.apache.org/maven2/.lastUpdated=1784690062256
+https\://repo.spring.io/milestone/.error=
+https\://repo.spring.io/milestone/.lastUpdated=1784690061397

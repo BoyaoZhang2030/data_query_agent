@@ -1,0 +1,8 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Jul 23 11:04:14 CST 2026
+@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784690070156
+https\://maven.aliyun.com/repository/public/.lastUpdated=1784775854068
+https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact org.apache.logging.log4j\:log4j-to-slf4j\:jar\:2.21.1 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
+https\://repo.maven.apache.org/maven2/.lastUpdated=1784690136719
+https\://repo.spring.io/milestone/.error=
+https\://repo.spring.io/milestone/.lastUpdated=1784690088312

@@ -1,0 +1,7 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Wed Jul 22 11:05:00 CST 2026
+@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784689499745
+https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact com.github.victools\:jsonschema-generator-bom\:pom\:4.31.1 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
+https\://repo.maven.apache.org/maven2/.lastUpdated=1784689500127
+https\://repo.spring.io/milestone/.error=
+https\://repo.spring.io/milestone/.lastUpdated=1784689499282

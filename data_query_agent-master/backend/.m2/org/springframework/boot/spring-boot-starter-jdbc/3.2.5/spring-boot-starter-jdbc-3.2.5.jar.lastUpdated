@@ -1,0 +1,8 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Jul 23 11:04:14 CST 2026
+@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784690070168
+https\://maven.aliyun.com/repository/public/.lastUpdated=1784775854192
+https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact org.springframework.boot\:spring-boot-starter-jdbc\:jar\:3.2.5 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
+https\://repo.maven.apache.org/maven2/.lastUpdated=1784690136740
+https\://repo.spring.io/milestone/.error=
+https\://repo.spring.io/milestone/.lastUpdated=1784690088319

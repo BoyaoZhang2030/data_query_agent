@@ -1,0 +1,8 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Jul 23 11:04:29 CST 2026
+@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784689502299
+https\://maven.aliyun.com/repository/public/.lastUpdated=1784775869654
+https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact com.fasterxml\:oss-parent\:pom\:48 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
+https\://repo.maven.apache.org/maven2/.lastUpdated=1784689503553
+https\://repo.spring.io/milestone/.error=
+https\://repo.spring.io/milestone/.lastUpdated=1784689502415
