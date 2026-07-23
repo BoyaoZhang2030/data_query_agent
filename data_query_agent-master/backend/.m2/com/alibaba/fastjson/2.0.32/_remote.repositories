@@ -1,4 +1,6 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 22 11:15:36 CST 2026
+#Thu Jul 23 14:55:11 CST 2026
 fastjson-2.0.32.jar>central=
+fastjson-2.0.32.pom>aliyunmaven=
 fastjson-2.0.32.pom>central=
+fastjson-2.0.32.jar>aliyunmaven=

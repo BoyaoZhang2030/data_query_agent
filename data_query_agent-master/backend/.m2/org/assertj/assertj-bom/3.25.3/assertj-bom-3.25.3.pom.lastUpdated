@@ -1,7 +1,8 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 22 11:02:55 CST 2026
-@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784689374710
-https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact org.assertj\:assertj-bom\:pom\:3.25.3 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
+#Thu Jul 23 14:55:02 CST 2026
 https\://repo.maven.apache.org/maven2/.lastUpdated=1784689375090
+https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact org.assertj\:assertj-bom\:pom\:3.25.3 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
 https\://repo.spring.io/milestone/.error=
 https\://repo.spring.io/milestone/.lastUpdated=1784689373870
+https\://maven.aliyun.com/repository/public/.lastUpdated=1784789702987
+@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784689374710

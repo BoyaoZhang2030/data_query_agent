@@ -1,7 +1,8 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 22 11:03:46 CST 2026
-@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784689425864
-https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact com.baomidou\:mybatis-plus-core\:pom\:3.5.8 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
+#Thu Jul 23 14:55:06 CST 2026
 https\://repo.maven.apache.org/maven2/.lastUpdated=1784689426286
+https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact com.baomidou\:mybatis-plus-core\:pom\:3.5.8 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
 https\://repo.spring.io/milestone/.error=
 https\://repo.spring.io/milestone/.lastUpdated=1784689425865
+https\://maven.aliyun.com/repository/public/.lastUpdated=1784789706236
+@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784689425864

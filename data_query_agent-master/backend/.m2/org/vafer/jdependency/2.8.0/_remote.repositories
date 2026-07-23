@@ -1,4 +1,6 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 22 11:17:40 CST 2026
+#Thu Jul 23 14:55:25 CST 2026
+jdependency-2.8.0.jar>aliyunmaven=
 jdependency-2.8.0.jar>central=
 jdependency-2.8.0.pom>central=
+jdependency-2.8.0.pom>aliyunmaven=

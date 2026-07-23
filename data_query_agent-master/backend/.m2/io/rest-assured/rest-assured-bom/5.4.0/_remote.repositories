@@ -1,3 +1,4 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 22 11:03:29 CST 2026
+#Thu Jul 23 14:55:05 CST 2026
 rest-assured-bom-5.4.0.pom>central=
+rest-assured-bom-5.4.0.pom>aliyunmaven=

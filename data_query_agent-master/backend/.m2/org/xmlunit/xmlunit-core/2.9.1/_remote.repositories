@@ -1,4 +1,6 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 22 11:15:36 CST 2026
-xmlunit-core-2.9.1.jar>central=
+#Thu Jul 23 14:55:11 CST 2026
 xmlunit-core-2.9.1.pom>central=
+xmlunit-core-2.9.1.pom>aliyunmaven=
+xmlunit-core-2.9.1.jar>central=
+xmlunit-core-2.9.1.jar>aliyunmaven=

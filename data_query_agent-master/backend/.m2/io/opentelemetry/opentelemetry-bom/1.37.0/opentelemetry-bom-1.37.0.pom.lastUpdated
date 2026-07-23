@@ -1,7 +1,8 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 22 11:03:22 CST 2026
-@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784689401869
-https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact io.opentelemetry\:opentelemetry-bom\:pom\:1.37.0 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
+#Thu Jul 23 14:55:04 CST 2026
 https\://repo.maven.apache.org/maven2/.lastUpdated=1784689402620
+https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact io.opentelemetry\:opentelemetry-bom\:pom\:1.37.0 from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
 https\://repo.spring.io/milestone/.error=
 https\://repo.spring.io/milestone/.lastUpdated=1784689401677
+https\://maven.aliyun.com/repository/public/.lastUpdated=1784789704871
+@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784689401869

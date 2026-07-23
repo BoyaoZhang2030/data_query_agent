@@ -41,6 +41,7 @@ export const authApi = {
 export const queryApi = {
   naturalLanguageQuery: (data) => api.post('/query/natural-language', data),
   sqlQuery: (data) => api.post('/query/sql', data),
+  analyzeResult: (data) => api.post('/query/analyze', data),
   getHistory: (userId) => api.get('/query/history', { params: { userId } }),
   getTemplates: () => api.get('/query/templates')
 }

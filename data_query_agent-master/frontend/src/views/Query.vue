@@ -1,491 +1,157 @@
 <template>
-  <div class="query-container">
-    <el-card class="query-card">
-      <template #header>
-        <div class="card-header">
-          <h2>📊 数据查询中心</h2>
-        </div>
-      </template>
-      <div class="query-content">
-        <el-tabs v-model="activeTab">
-          <el-tab-pane label="🤖 智能问答" name="natural-language">
-            <div class="naturallanguage-section">
-              <el-form :model="naturalLanguageForm">
-                <el-form-item label="请描述你的问题">
-                  <el-input
-                    v-model="naturalLanguageForm.query"
-                    type="textarea"
-                    :rows="4"
-                    placeholder="例如：查询本月销量最好的商品有哪些？"
-                    @keyup.enter.ctrl="naturalLanguageQuery"
-                  />
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" @click="naturalLanguageQuery" :loading="loading" size="large">
-                    <span v-if="!loading">🔍 立即查询</span>
-                    <span v-else>AI正在分析...</span>
-                  </el-button>
-                  <el-button @click="showTemplates" size="large">📋 查看示例</el-button>
-                </el-form-item>
-              </el-form>
-
-              <!-- 快捷查询标签 -->
-              <div class="quick-queries">
-                <span class="quick-label">快捷查询：</span>
-                <el-tag
-                  v-for="(q, index) in quickQueries"
-                  :key="index"
-                  class="quick-tag"
-                  @click="useQuickQuery(q)"
-                >
-                  {{ q }}
-                </el-tag>
-              </div>
-            </div>
-          </el-tab-pane>
-
-          <el-tab-pane label="💻 SQL查询" name="sql">
-            <el-form :model="sqlForm">
-              <el-form-item label="SQL语句">
-                <el-input
-                  v-model="sqlForm.sql"
-                  type="textarea"
-                  :rows="6"
-                  placeholder="请输入SQL语句，例如：SELECT * FROM products"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="sqlQuery" :loading="loading" size="large">
-                  <span v-if="!loading">▶ 执行查询</span>
-                  <span v-else>执行中...</span>
-                </el-button>
-              </el-form-item>
-            </el-form>
-          </el-tab-pane>
-
-          <el-tab-pane label="📜 查询历史" name="history">
-            <el-table :data="queryHistory" style="width: 100%" v-if="queryHistory.length > 0">
-              <el-table-column prop="naturalLanguage" label="查询语句" width="300" show-overflow-tooltip />
-              <el-table-column prop="sqlQuery" label="SQL语句" width="350" show-overflow-tooltip />
-              <el-table-column prop="resultCount" label="结果数" width="100" />
-              <el-table-column prop="createdAt" label="查询时间" width="180" />
-              <el-table-column label="操作" width="120">
-                <template #default="scope">
-                  <el-button type="text" @click="reexecuteQuery(scope.row)">重新执行</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-empty v-else description="暂无查询历史" />
-          </el-tab-pane>
-        </el-tabs>
-
-        <!-- 查询结果 -->
-        <el-card v-if="queryResult" class="result-card">
-          <template #header>
-            <div class="result-header">
-              <h3>📋 查询结果</h3>
-              <div>
-                <el-button type="text" @click="exportResult">📥 导出CSV</el-button>
-                <el-button type="text" @click="queryResult = null">❌ 关闭</el-button>
-              </div>
-            </div>
-          </template>
-          <div class="result-content">
-            <div class="sql-display" v-if="queryResult.sql">
-              <el-tag type="info">生成的SQL</el-tag>
-              <pre>{{ queryResult.sql }}</pre>
-            </div>
-            <el-table :data="queryResult.result" style="width: 100%" border stripe>
-              <el-table-column
-                v-for="(value, key) in queryResult.result[0] || {}"
-                :key="key"
-                :prop="key"
-                :label="formatLabel(key)"
-                min-width="120"
-              />
-            </el-table>
-            <div class="result-info">
-              共 {{ queryResult.count }} 条记录
-            </div>
-          </div>
-        </el-card>
-      </div>
+  <div class="query-page">
+    <el-card>
+      <template #header><div class="header"><h2>数据查询中心</h2><span>自然语言、SQL、可视化与 AI 洞察</span></div></template>
+      <el-tabs v-model="activeTab">
+        <el-tab-pane label="智能问答" name="natural">
+          <el-input v-model="naturalQuery" type="textarea" :rows="4" placeholder="例如：查询销量最高的前 10 个商品" />
+          <el-button class="action" type="primary" :loading="loading" @click="runNaturalQuery">立即查询</el-button>
+        </el-tab-pane>
+        <el-tab-pane label="SQL 查询" name="sql">
+          <el-input v-model="sql" type="textarea" :rows="5" placeholder="仅支持 SELECT 查询" />
+          <el-button class="action" type="primary" :loading="loading" @click="runSqlQuery">执行查询</el-button>
+        </el-tab-pane>
+        <el-tab-pane label="查询历史" name="history">
+          <el-table :data="history" stripe>
+            <el-table-column prop="naturalLanguage" label="查询内容" min-width="220" />
+            <el-table-column prop="sqlQuery" label="SQL" min-width="300" show-overflow-tooltip />
+            <el-table-column prop="resultCount" label="结果数" width="90" />
+            <el-table-column prop="createdAt" label="时间" width="180" />
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
     </el-card>
 
-    <!-- 常用模板对话框 -->
-    <el-dialog
-      v-model="templatesDialogVisible"
-      title="📚 常用查询示例"
-      width="700px"
-    >
-      <div class="template-categories">
-        <div v-for="category in templateCategories" :key="category.name" class="template-category">
-          <h4>{{ category.name }}</h4>
-          <el-space wrap>
-            <el-tag
-              v-for="(template, index) in category.templates"
-              :key="index"
-              class="template-tag"
-              @click="useTemplate(template)"
-            >
-              {{ template }}
-            </el-tag>
-          </el-space>
-        </div>
-      </div>
-    </el-dialog>
+    <template v-if="rows.length">
+      <el-card class="result-card">
+        <template #header>
+          <div class="result-header">
+            <div><h3>查询结果</h3><small>共 {{ rows.length }} 条记录</small></div>
+            <el-space>
+              <el-button @click="exportCsv">导出 CSV</el-button>
+              <el-button @click="exportExcel">导出 Excel</el-button>
+              <el-button type="primary" :loading="analyzing" @click="analyze">AI 分析</el-button>
+            </el-space>
+          </div>
+        </template>
+        <div v-if="result.sql" class="sql-box"><b>执行 SQL</b><code>{{ result.sql }}</code></div>
+        <el-table :data="rows" border stripe max-height="480">
+          <el-table-column v-for="column in columns" :key="column" :prop="column" :label="column" min-width="130" show-overflow-tooltip />
+        </el-table>
+      </el-card>
+
+      <el-card v-if="chartConfig" class="result-card">
+        <template #header>
+          <div class="result-header"><div><h3>自动可视化</h3><small>{{ chartDescription }}</small></div>
+            <el-radio-group v-model="chartType" size="small"><el-radio-button label="bar">柱状图</el-radio-button><el-radio-button label="line">折线图</el-radio-button><el-radio-button label="pie">饼图</el-radio-button></el-radio-group>
+          </div>
+        </template>
+        <div ref="chartElement" class="chart"></div>
+      </el-card>
+
+      <el-card v-if="analysis" class="result-card analysis-card">
+        <template #header><h3>AI 数据洞察</h3></template>
+        <div class="analysis">{{ analysis }}</div>
+      </el-card>
+    </template>
+    <el-empty v-else-if="hasQueried" description="查询成功，但没有返回数据" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
 import { queryApi } from '../api'
 
-const activeTab = ref('natural-language')
+const activeTab = ref('natural')
+const naturalQuery = ref('')
+const sql = ref('')
 const loading = ref(false)
-const queryResult = ref(null)
-const queryHistory = ref([])
-const queryTemplates = ref([])
-const templatesDialogVisible = ref(false)
+const analyzing = ref(false)
+const hasQueried = ref(false)
+const result = ref({ result: [] })
+const history = ref([])
+const analysis = ref('')
+const chartType = ref('bar')
+const chartElement = ref()
+let chart
 
-const naturalLanguageForm = ref({
-  query: ''
-})
+const rows = computed(() => Array.isArray(result.value?.result) ? result.value.result : [])
+const columns = computed(() => rows.value.length ? Object.keys(rows.value[0]) : [])
+const categoryColumn = computed(() => columns.value.find(c => rows.value.some(r => typeof r[c] === 'string')) || columns.value[0])
+const numericColumn = computed(() => columns.value.find(c => rows.value.some(r => typeof r[c] === 'number' || (!Number.isNaN(Number(r[c])) && r[c] !== ''))))
+const chartConfig = computed(() => rows.value.length > 0 && categoryColumn.value && numericColumn.value && categoryColumn.value !== numericColumn.value)
+const chartDescription = computed(() => `${categoryColumn.value || ''} 与 ${numericColumn.value || ''} 的关系（最多展示 30 条）`)
 
-const sqlForm = ref({
-  sql: ''
-})
-
-const quickQueries = [
-  '本月销售额',
-  '销量前10商品',
-  '待发货订单',
-  '库存不足商品',
-  '用户购买统计'
-]
-
-const templateCategories = [
-  {
-    name: '📦 商品查询',
-    templates: [
-      '查询所有商品信息',
-      '查询价格大于500元的商品',
-      '查询库存低于100的商品',
-      '查询每个分类的商品数量',
-      '查询销量最高的前10个商品',
-      '查询商品平均价格'
-    ]
-  },
-  {
-    name: '🛒 订单查询',
-    templates: [
-      '查询所有订单',
-      '查询已完成的订单',
-      '查询待发货的订单',
-      '查询待付款的订单',
-      '查询最近7天的订单',
-      '查询订单总额超过1000元的订单',
-      '查询每个用户的订单数量'
-    ]
-  },
-  {
-    name: '💰 销售统计',
-    templates: [
-      '查询总销售额',
-      '查询本月销售额',
-      '查询每个商品的销售总额',
-      '查询销售额最高的前10个商品',
-      '查询各类别的销售占比'
-    ]
-  },
-  {
-    name: '👥 用户统计',
-    templates: [
-      '查询所有用户',
-      '查询下单次数最多的用户',
-      '查询每个用户的消费总额',
-      '查询新用户数量'
-    ]
-  },
-  {
-    name: '📂 分类统计',
-    templates: [
-      '查询所有分类',
-      '查询每个分类的商品数量',
-      '查询每个分类的销售总额',
-      '查询热门分类'
-    ]
-  }
-]
-
-const getUserId = () => {
-  const user = localStorage.getItem('user')
-  if (user) {
-    return JSON.parse(user).id
-  }
-  return 1
+const userId = () => JSON.parse(localStorage.getItem('user') || '{}').id || 1
+const acceptResult = async (response) => {
+  if (response.code !== 200) throw new Error(response.message || '查询失败')
+  result.value = response.data || { result: [] }
+  analysis.value = ''
+  hasQueried.value = true
+  await loadHistory()
+  await nextTick()
+  renderChart()
 }
-
-const naturalLanguageQuery = async () => {
-  if (!naturalLanguageForm.value.query) {
-    ElMessage.warning('请输入查询语句')
-    return
-  }
-
+const runNaturalQuery = async () => {
+  if (!naturalQuery.value.trim()) return ElMessage.warning('请输入查询问题')
   loading.value = true
-  try {
-    const response = await queryApi.naturalLanguageQuery({
-      naturalLanguage: naturalLanguageForm.value.query,
-      userId: getUserId()
-    })
-    if (response.code === 200) {
-      queryResult.value = response.data
-      loadQueryHistory()
-      ElMessage.success('查询成功')
-    } else {
-      ElMessage.error(response.message || '查询失败')
-    }
-  } catch (error) {
-    ElMessage.error('查询失败，请稍后重试')
-  } finally {
-    loading.value = false
-  }
+  try { await acceptResult(await queryApi.naturalLanguageQuery({ naturalLanguage: naturalQuery.value.trim(), userId: userId() })); ElMessage.success('查询成功') }
+  catch (e) { ElMessage.error(e.response?.data?.message || e.message || '查询失败') }
+  finally { loading.value = false }
 }
-
-const sqlQuery = async () => {
-  if (!sqlForm.value.sql) {
-    ElMessage.warning('请输入SQL语句')
-    return
-  }
-
+const runSqlQuery = async () => {
+  if (!sql.value.trim()) return ElMessage.warning('请输入 SQL')
   loading.value = true
+  try { await acceptResult(await queryApi.sqlQuery({ sql: sql.value.trim(), userId: userId() })); ElMessage.success('查询成功') }
+  catch (e) { ElMessage.error(e.response?.data?.message || e.message || '查询失败') }
+  finally { loading.value = false }
+}
+const analyze = async () => {
+  analyzing.value = true
   try {
-    const response = await queryApi.sqlQuery({
-      sql: sqlForm.value.sql,
-      userId: getUserId()
-    })
-    if (response.code === 200) {
-      queryResult.value = response.data
-      loadQueryHistory()
-      ElMessage.success('查询成功')
-    } else {
-      ElMessage.error(response.message || '查询失败')
-    }
-  } catch (error) {
-    ElMessage.error('查询失败，请稍后重试')
-  } finally {
-    loading.value = false
-  }
+    const response = await queryApi.analyzeResult({ question: naturalQuery.value || sql.value || '分析查询结果', result: rows.value.slice(0, 100) })
+    if (response.code !== 200) throw new Error(response.message)
+    analysis.value = response.data.analysis
+  } catch (e) { ElMessage.error(e.response?.data?.message || e.message || '分析失败') }
+  finally { analyzing.value = false }
 }
-
-const loadQueryHistory = async () => {
-  try {
-    const response = await queryApi.getHistory(getUserId())
-    if (response.code === 200) {
-      queryHistory.value = response.data || []
-    }
-  } catch (error) {
-    console.error('加载查询历史失败:', error)
-  }
+const renderChart = () => {
+  if (!chartConfig.value || !chartElement.value) return
+  chart ||= echarts.init(chartElement.value)
+  const data = rows.value.slice(0, 30)
+  const labels = data.map(row => String(row[categoryColumn.value] ?? ''))
+  const values = data.map(row => Number(row[numericColumn.value]) || 0)
+  const series = chartType.value === 'pie'
+    ? [{ type: 'pie', radius: ['35%', '70%'], data: labels.map((name, i) => ({ name, value: values[i] })) }]
+    : [{ type: chartType.value, data: values, smooth: chartType.value === 'line', itemStyle: { color: '#409eff' } }]
+  chart.setOption({ tooltip: { trigger: chartType.value === 'pie' ? 'item' : 'axis' }, legend: chartType.value === 'pie' ? { bottom: 0 } : undefined, grid: { left: 55, right: 25, top: 25, bottom: 70 }, xAxis: chartType.value === 'pie' ? undefined : { type: 'category', data: labels, axisLabel: { rotate: labels.length > 8 ? 35 : 0 } }, yAxis: chartType.value === 'pie' ? undefined : { type: 'value' }, series }, true)
 }
+watch(chartType, () => nextTick(renderChart))
+watch(rows, () => nextTick(renderChart))
 
-const loadQueryTemplates = async () => {
-  try {
-    const response = await queryApi.getTemplates()
-    if (response.code === 200) {
-      queryTemplates.value = response.data.templates
-    }
-  } catch (error) {
-    console.error('加载查询模板失败:', error)
-  }
+const csvCell = value => `"${String(value ?? '').replaceAll('"', '""')}"`
+const download = (content, type, extension) => {
+  const url = URL.createObjectURL(new Blob([content], { type }))
+  const link = document.createElement('a'); link.href = url; link.download = `query-result-${Date.now()}.${extension}`; link.click(); URL.revokeObjectURL(url)
 }
-
-const showTemplates = () => {
-  templatesDialogVisible.value = true
+const exportCsv = () => {
+  const content = '\ufeff' + [columns.value.map(csvCell).join(','), ...rows.value.map(row => columns.value.map(c => csvCell(row[c])).join(','))].join('\r\n')
+  download(content, 'text/csv;charset=utf-8', 'csv'); ElMessage.success('CSV 已导出')
 }
-
-const useTemplate = (template) => {
-  naturalLanguageForm.value.query = template
-  activeTab.value = 'natural-language'
-  templatesDialogVisible.value = false
+const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]))
+const exportExcel = () => {
+  const table = `<html><head><meta charset="UTF-8"></head><body><table border="1"><tr>${columns.value.map(c => `<th>${escapeHtml(c)}</th>`).join('')}</tr>${rows.value.map(row => `<tr>${columns.value.map(c => `<td>${escapeHtml(row[c])}</td>`).join('')}</tr>`).join('')}</table></body></html>`
+  download('\ufeff' + table, 'application/vnd.ms-excel;charset=utf-8', 'xls'); ElMessage.success('Excel 已导出')
 }
-
-const useQuickQuery = (query) => {
-  naturalLanguageForm.value.query = query
-  naturalLanguageQuery()
-}
-
-const reexecuteQuery = (history) => {
-  if (history.naturalLanguage !== 'SQL查询') {
-    naturalLanguageForm.value.query = history.naturalLanguage
-    activeTab.value = 'natural-language'
-  } else {
-    sqlForm.value.sql = history.sqlQuery
-    activeTab.value = 'sql'
-  }
-}
-
-const formatLabel = (key) => {
-  const labelMap = {
-    'id': 'ID',
-    'name': '名称',
-    'username': '用户名',
-    'email': '邮箱',
-    'price': '价格',
-    'stock': '库存',
-    'total_amount': '总金额',
-    'total_sales': '销售总额',
-    'total_quantity': '销售数量',
-    'order_count': '订单数',
-    'product_count': '商品数',
-    'user_count': '用户数',
-    'category_name': '分类名称',
-    'status': '状态',
-    'created_at': '创建时间',
-    'updated_at': '更新时间'
-  }
-  return labelMap[key] || key
-}
-
-const exportResult = () => {
-  if (!queryResult.value || !queryResult.value.result) return
-
-  const headers = Object.keys(queryResult.value.result[0] || {})
-  const csvContent = [
-    headers.join(','),
-    ...queryResult.value.result.map(row =>
-      headers.map(header => {
-        const val = row[header]
-        if (val === null || val === undefined) return ''
-        const str = String(val)
-        return str.includes(',') ? `"${str}"` : str
-      }).join(',')
-    )
-  ].join('\n')
-
-  const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' })
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(blob)
-  link.setAttribute('download', `query-result-${new Date().toISOString().slice(0, 10)}.csv`)
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  ElMessage.success('导出成功')
-}
-
-onMounted(() => {
-  loadQueryHistory()
-  loadQueryTemplates()
-})
+const loadHistory = async () => { try { const r = await queryApi.getHistory(userId()); history.value = r.data || [] } catch (_) {} }
+const resize = () => chart?.resize()
+onMounted(() => { loadHistory(); window.addEventListener('resize', resize) })
+onBeforeUnmount(() => { window.removeEventListener('resize', resize); chart?.dispose() })
 </script>
 
 <style scoped>
-.query-container {
-  width: 100%;
-}
-
-.query-card {
-  margin-bottom: 20px;
-}
-
-.card-header h2 {
-  margin: 0;
-  color: #409EFF;
-  font-size: 24px;
-}
-
-.query-content {
-  padding: 20px 0;
-}
-
-.naturallanguage-section {
-  padding: 10px 0;
-}
-
-.quick-queries {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #f5f7fa;
-  border-radius: 8px;
-}
-
-.quick-label {
-  font-weight: 600;
-  color: #606266;
-  margin-right: 10px;
-}
-
-.quick-tag {
-  margin: 5px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.quick-tag:hover {
-  transform: scale(1.05);
-}
-
-.result-card {
-  margin-top: 20px;
-}
-
-.result-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.result-header h3 {
-  margin: 0;
-  font-size: 16px;
-  color: #303133;
-}
-
-.sql-display {
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: #f5f7fa;
-  border-radius: 8px;
-}
-
-.sql-display pre {
-  margin: 10px 0 0 0;
-  white-space: pre-wrap;
-  font-family: 'Consolas', monospace;
-  font-size: 13px;
-  color: #409EFF;
-}
-
-.result-info {
-  margin-top: 15px;
-  text-align: right;
-  color: #606266;
-  font-size: 14px;
-}
-
-.template-categories {
-  padding: 10px 0;
-}
-
-.template-category {
-  margin-bottom: 20px;
-}
-
-.template-category h4 {
-  margin: 0 0 10px 0;
-  color: #303133;
-  font-size: 15px;
-}
-
-.template-tag {
-  margin: 5px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.template-tag:hover {
-  background-color: #409EFF;
-  color: #fff;
-}
+.query-page { display: grid; gap: 20px; }.header,.result-header { display:flex; align-items:center; justify-content:space-between; gap:16px }.header h2,.result-header h3 { margin:0 }.header span,.result-header small { color:#909399 }.action { margin-top:16px }.result-card { margin-top:20px }.sql-box { display:grid; gap:8px; margin-bottom:16px; padding:14px; border-radius:10px; background:#f5f7fa }.sql-box code { white-space:pre-wrap; color:#337ecc }.chart { width:100%; height:420px }.analysis { white-space:pre-wrap; line-height:1.9; color:#34495e }.analysis-card { border-left:4px solid #409eff }
+@media (max-width:700px) { .header,.result-header { align-items:flex-start; flex-direction:column }.chart { height:320px } }
 </style>

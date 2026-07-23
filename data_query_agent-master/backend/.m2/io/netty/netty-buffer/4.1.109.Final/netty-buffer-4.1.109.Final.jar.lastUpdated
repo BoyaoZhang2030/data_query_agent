@@ -1,7 +1,8 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Wed Jul 22 11:15:36 CST 2026
-@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784690070169
-https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact io.netty\:netty-buffer\:jar\:4.1.109.Final from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
+#Thu Jul 23 14:55:11 CST 2026
 https\://repo.maven.apache.org/maven2/.lastUpdated=1784690136741
+https\://maven.aliyun.com/repository/springai/.error=Could not transfer artifact io.netty\:netty-buffer\:jar\:4.1.109.Final from/to aliyun-springai (https\://maven.aliyun.com/repository/springai)\: status code\: 401, reason phrase\: Unauthorized (401)
 https\://repo.spring.io/milestone/.error=
 https\://repo.spring.io/milestone/.lastUpdated=1784690088320
+https\://maven.aliyun.com/repository/public/.lastUpdated=1784789711219
+@default-aliyun-springai-https\://maven.aliyun.com/repository/springai/.lastUpdated=1784690070169

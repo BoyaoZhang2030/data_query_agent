@@ -282,4 +282,63 @@ public class DataQueryServiceImpl implements DataQueryService {
         }
         return content;
     }
+
+    @Override
+    public String analyzeQueryResult(String question, List<Map<String, Object>> rows) {
+        if (rows == null || rows.isEmpty()) {
+            return "本次查询没有返回数据，暂时无法形成趋势结论。建议调整筛选条件或扩大时间范围。";
+        }
+
+        List<Map<String, Object>> sample = rows.stream().limit(50).toList();
+        if (deepSeekApiKey == null || deepSeekApiKey.isBlank()) {
+            return buildLocalSummary(rows);
+        }
+
+        try {
+            String prompt = """
+                你是一名电商数据分析师。请根据用户问题和查询结果，用中文输出简洁、客观的分析。
+                要求：先给出核心结论，再列出2-4条数据洞察，最后给出一条可执行建议；不要编造结果中不存在的数据。
+                用户问题：%s
+                查询结果（最多50行）：%s
+                """.formatted(question, sample);
+            Map<?, ?> response = RestClient.builder()
+                    .baseUrl(deepSeekBaseUrl)
+                    .defaultHeader("Authorization", "Bearer " + deepSeekApiKey)
+                    .build().post().uri("/chat/completions")
+                    .body(Map.of(
+                            "model", deepSeekModel,
+                            "messages", List.of(Map.of("role", "user", "content", prompt)),
+                            "temperature", 0.2
+                    ))
+                    .retrieve().body(Map.class);
+            return extractDeepSeekContent(response).trim();
+        } catch (Exception e) {
+            log.warn("AI analysis failed, using local summary: {}", e.getMessage());
+            return buildLocalSummary(rows);
+        }
+    }
+
+    private String buildLocalSummary(List<Map<String, Object>> rows) {
+        Set<String> fields = rows.get(0).keySet();
+        List<String> numericFields = fields.stream()
+                .filter(field -> rows.stream().anyMatch(row -> row.get(field) instanceof Number))
+                .toList();
+        StringBuilder summary = new StringBuilder("本次查询共返回 ")
+                .append(rows.size()).append(" 条记录，包含字段：")
+                .append(String.join("、", fields)).append("。");
+        for (String field : numericFields.stream().limit(3).toList()) {
+            DoubleSummaryStatistics stats = rows.stream()
+                    .map(row -> row.get(field))
+                    .filter(Number.class::isInstance)
+                    .mapToDouble(value -> ((Number) value).doubleValue())
+                    .summaryStatistics();
+            summary.append("\n- ").append(field).append("：合计 ")
+                    .append(String.format(Locale.ROOT, "%.2f", stats.getSum()))
+                    .append("，平均 ").append(String.format(Locale.ROOT, "%.2f", stats.getAverage()))
+                    .append("，范围 ").append(String.format(Locale.ROOT, "%.2f - %.2f", stats.getMin(), stats.getMax()))
+                    .append("。");
+        }
+        summary.append("\n建议结合业务目标继续按时间、分类或商品维度细分，以定位主要贡献项和异常点。");
+        return summary.toString();
+    }
 }

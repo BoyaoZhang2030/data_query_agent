@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
 import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/query")
@@ -30,6 +31,16 @@ public class DataQueryController {
         Long userId = Long.valueOf(requestData.get("userId").toString());
         Map<String, Object> result = dataQueryService.queryBySql(sql, userId);
         return Result.success("查询成功", result);
+    }
+
+    @PostMapping("/analyze")
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> analyze(@RequestBody Map<String, Object> requestData) {
+        String question = String.valueOf(requestData.getOrDefault("question", "数据查询"));
+        Object result = requestData.get("result");
+        List<Map<String, Object>> rows = result instanceof List<?>
+                ? (List<Map<String, Object>>) result : List.of();
+        return Result.success(Map.of("analysis", dataQueryService.analyzeQueryResult(question, rows)));
     }
 
     @GetMapping("/history")
