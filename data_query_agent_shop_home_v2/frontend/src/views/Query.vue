@@ -51,7 +51,7 @@
 
       <el-card v-if="analysis" class="result-card analysis-card">
         <template #header><h3>AI 数据洞察</h3></template>
-        <div class="analysis">{{ analysis }}</div>
+        <div class="analysis markdown-body" v-html="renderedAnalysis"></div>
       </el-card>
     </template>
     <el-empty v-else-if="hasQueried" description="查询成功，但没有返回数据" />
@@ -62,6 +62,8 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import * as echarts from 'echarts'
 import { ElMessage } from 'element-plus'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import { queryApi } from '../api'
 
 const activeTab = ref('natural')
@@ -83,6 +85,8 @@ const categoryColumn = computed(() => columns.value.find(c => rows.value.some(r 
 const numericColumn = computed(() => columns.value.find(c => rows.value.some(r => typeof r[c] === 'number' || (!Number.isNaN(Number(r[c])) && r[c] !== ''))))
 const chartConfig = computed(() => rows.value.length > 0 && categoryColumn.value && numericColumn.value && categoryColumn.value !== numericColumn.value)
 const chartDescription = computed(() => `${categoryColumn.value || ''} 与 ${numericColumn.value || ''} 的关系（最多展示 30 条）`)
+marked.setOptions({ gfm: true, breaks: true })
+const renderedAnalysis = computed(() => DOMPurify.sanitize(marked.parse(analysis.value || '')))
 
 const userId = () => JSON.parse(localStorage.getItem('user') || '{}').id || 1
 const acceptResult = async (response) => {
@@ -152,6 +156,7 @@ onBeforeUnmount(() => { window.removeEventListener('resize', resize); chart?.dis
 </script>
 
 <style scoped>
-.query-page { display: grid; gap: 20px; }.header,.result-header { display:flex; align-items:center; justify-content:space-between; gap:16px }.header h2,.result-header h3 { margin:0 }.header span,.result-header small { color:#909399 }.action { margin-top:16px }.result-card { margin-top:20px }.sql-box { display:grid; gap:8px; margin-bottom:16px; padding:14px; border-radius:10px; background:#f5f7fa }.sql-box code { white-space:pre-wrap; color:#337ecc }.chart { width:100%; height:420px }.analysis { white-space:pre-wrap; line-height:1.9; color:#34495e }.analysis-card { border-left:4px solid #409eff }
+.query-page { display: grid; gap: 20px; }.header,.result-header { display:flex; align-items:center; justify-content:space-between; gap:16px }.header h2,.result-header h3 { margin:0 }.header span,.result-header small { color:#909399 }.action { margin-top:16px }.result-card { margin-top:20px }.sql-box { display:grid; gap:8px; margin-bottom:16px; padding:14px; border-radius:10px; background:#f5f7fa }.sql-box code { white-space:pre-wrap; color:#337ecc }.chart { width:100%; height:420px }.analysis { line-height:1.85; color:#34495e }.analysis-card { border-left:4px solid #409eff }
+.markdown-body :deep(h1),.markdown-body :deep(h2),.markdown-body :deep(h3),.markdown-body :deep(h4) { margin:1.25em 0 .55em; color:#183b5b; line-height:1.35 }.markdown-body :deep(h1) { font-size:1.65rem }.markdown-body :deep(h2) { padding-bottom:.35em; border-bottom:1px solid #e5edf5; font-size:1.4rem }.markdown-body :deep(h3) { font-size:1.18rem }.markdown-body :deep(p) { margin:.65em 0 }.markdown-body :deep(ul),.markdown-body :deep(ol) { margin:.65em 0; padding-left:1.8em }.markdown-body :deep(li) { margin:.3em 0 }.markdown-body :deep(strong) { color:#1d5f9b }.markdown-body :deep(blockquote) { margin:1em 0; padding:.7em 1em; color:#5c7083; border-left:4px solid #70b8f4; border-radius:0 8px 8px 0; background:#f2f8fd }.markdown-body :deep(code) { padding:.18em .4em; color:#d14; border-radius:5px; background:#f1f4f7; font-family:"SFMono-Regular",Consolas,monospace }.markdown-body :deep(pre) { overflow:auto; margin:1em 0; padding:16px; border-radius:10px; background:#182433 }.markdown-body :deep(pre code) { padding:0; color:#e8f1f8; background:transparent }.markdown-body :deep(table) { width:100%; margin:1em 0; border-collapse:collapse }.markdown-body :deep(th),.markdown-body :deep(td) { padding:9px 12px; border:1px solid #dce6ef; text-align:left }.markdown-body :deep(th) { color:#254765; background:#edf6fd }.markdown-body :deep(a) { color:#337ecc; text-decoration:none }.markdown-body :deep(hr) { margin:1.4em 0; border:0; border-top:1px solid #dce6ef }
 @media (max-width:700px) { .header,.result-header { align-items:flex-start; flex-direction:column }.chart { height:320px } }
 </style>
