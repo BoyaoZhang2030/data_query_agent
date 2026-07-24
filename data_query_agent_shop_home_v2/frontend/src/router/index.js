@@ -73,7 +73,6 @@ router.beforeEach((to) => {
   const user = savedUser ? JSON.parse(savedUser) : null
   if (!to.meta.public && !user) return '/login'
   if (to.meta.admin && user?.role !== 'admin') return '/shop'
-  if (to.meta.shop && user?.role === 'admin') return '/dashboard'
   if ((to.path === '/login' || to.path === '/register') && user && to.query.mode !== 'admin') {
     return user.role === 'admin' ? '/dashboard' : '/shop'
   }

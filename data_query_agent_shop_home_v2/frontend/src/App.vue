@@ -54,6 +54,7 @@
             <div class="header-actions" v-if="user">
               <div class="user-avatar">{{ user.username?.slice(0, 1).toUpperCase() }}</div>
               <div class="user-info"><strong>{{ user.username }}</strong><small>{{ user.role === 'admin' ? '管理员' : '普通用户' }}</small></div>
+              <el-button v-if="user.role === 'admin'" class="shop-switch-button" @click="router.push('/shop')">切换到淘气宝贝</el-button>
               <el-button class="logout-button" @click="logout">退出登录</el-button>
               <button class="secret-disco" aria-label="隐藏模式" @click="toggleDisco"></button>
             </div>

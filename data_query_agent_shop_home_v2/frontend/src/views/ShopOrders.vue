@@ -2,7 +2,7 @@
   <div class="orders-page">
     <header>
       <div class="header-inner">
-        <div class="brand" @click="$router.push('/shop')"><span>橙</span><b>橙选商城</b></div>
+        <div class="brand" @click="$router.push('/shop')"><span>淘</span><b>淘气宝贝</b></div>
         <nav><button @click="$router.push('/shop')">商城首页</button><strong>我的订单</strong><span>{{ user.username }}</span><button @click="logout">退出</button></nav>
       </div>
     </header>
