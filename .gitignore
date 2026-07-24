@@ -11,3 +11,7 @@ Thumbs.db
 .DS_Store
 # 重要！避免数据库、DeepSeek密钥泄露
 backend/src/main/resources/application.yml
+backend/target/
+# Maven
+target/
+!pom.xml
